@@ -174,7 +174,7 @@ export default function ConversationPage({ currentUser }) {
         </div>
       ) : (
         <>
-          <div className="flex-1 space-y-2 overflow-y-auto pb-3">
+          <div className="flex-1 space-y-2 overflow-y-auto pb-3 no-scrollbar">
             {messages.map((m) => {
               const mine = m.senderId === currentUser.id;
               return (

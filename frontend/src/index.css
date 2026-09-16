@@ -12,6 +12,14 @@ body {
   font-family: "Poppins", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
 }
 
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes aurora-drift-1 {
   0%,
   100% {
