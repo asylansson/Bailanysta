@@ -14,7 +14,6 @@ import { TOPIC_IDS } from "../topics.js";
 
 const router = Router();
 const MAX_POST_LENGTH = 1000;
-const RECOMMENDATIONS_WINDOW_MS = 3 * 24 * 60 * 60 * 1000;
 
 function sortByNewest(posts) {
   return [...posts].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -75,16 +74,10 @@ router.get("/", async (req, res) => {
     );
     sorted = sortByNewest(posts);
   } else {
-    // Recommendations tab (default, also for guests): last 3 days, ranked by the viewer's
+    // Recommendations tab (default, also for guests): all-time, ranked by the viewer's
     // chosen interest topics first (each group most-liked first), then everything else.
     // Private authors are excluded unless the viewer already follows them.
-    const cutoff = Date.now() - RECOMMENDATIONS_WINDOW_MS;
-    posts = db.posts.filter(
-      (p) =>
-        !p.communityId &&
-        new Date(p.createdAt).getTime() >= cutoff &&
-        canViewUserContent(db, p.authorId, req.user?.id)
-    );
+    posts = db.posts.filter((p) => !p.communityId && canViewUserContent(db, p.authorId, req.user?.id));
 
     const viewer = req.user ? findUserById(db, req.user.id) : null;
     const interests = viewer?.interests || [];

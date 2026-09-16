@@ -50,7 +50,7 @@ export const TRANSLATIONS = {
       loadError: "Не удалось загрузить ленту. Проверьте, запущен ли сервер.",
       recommendations: "Рекомендации",
       subscriptions: "Подписки",
-      emptyRecommendations: "За последние три дня ещё не появилось популярных постов.",
+      emptyRecommendations: "Пока нет популярных постов.",
       emptySubscriptions: "Люди и сообщества, на которых вы подписаны, пока ничего не публиковали.",
     },
     post: {
@@ -335,7 +335,7 @@ export const TRANSLATIONS = {
       loadError: "Таспаны жүктеу мүмкін болмады. Сервер іске қосылғанын тексеріңіз.",
       recommendations: "Ұсыныстар",
       subscriptions: "Жазылымдар",
-      emptyRecommendations: "Соңғы үш күнде танымал посттар әлі пайда болған жоқ.",
+      emptyRecommendations: "Әзірге танымал посттар жоқ.",
       emptySubscriptions: "Сіз жазылған адамдар мен ұйымдар әлі ештеңе жарияламады.",
     },
     post: {
@@ -620,7 +620,7 @@ export const TRANSLATIONS = {
       loadError: "Could not load the feed. Check that the server is running.",
       recommendations: "Recommendations",
       subscriptions: "Subscriptions",
-      emptyRecommendations: "No popular posts from the last three days yet.",
+      emptyRecommendations: "No popular posts yet.",
       emptySubscriptions: "The people and communities you follow haven't posted anything yet.",
     },
     post: {
