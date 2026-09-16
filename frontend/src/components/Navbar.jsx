@@ -12,8 +12,11 @@ const primaryActive = "bg-violet-600 text-white shadow-sm";
 const primaryInactive =
   "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50";
 
+// The hover-expand only kicks in at sm: and up - hover doesn't mean much on a
+// touch screen (some mobile browsers "stick" it after a tap), so phones just
+// get plain icon buttons with no expand animation at all.
 const labelClass =
-  "ml-0 max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:max-w-[10rem] group-hover:opacity-100";
+  "ml-0 max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 sm:transition-all sm:duration-300 sm:group-hover:ml-2 sm:group-hover:max-w-[10rem] sm:group-hover:opacity-100";
 
 const iconBase =
   "flex items-center justify-center h-11 w-11 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
