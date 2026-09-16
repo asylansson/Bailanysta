@@ -5,7 +5,7 @@ import { signInWithGoogle } from "../api.js";
 import { useI18n } from "../i18n/I18nContext.jsx";
 
 export default function ProfileGate({ user, onLogin }) {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [error, setError] = useState("");
 
   if (user) {
@@ -29,11 +29,13 @@ export default function ProfileGate({ user, onLogin }) {
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{t("profileGate.subtitle")}</p>
         <div className="mt-5 flex justify-center">
           <GoogleLogin
+            key={language}
             onSuccess={handleSuccess}
             onError={() => setError(t("profileGate.error"))}
             theme="filled_blue"
             shape="pill"
             text="signin_with"
+            locale={language}
           />
         </div>
         {error && <p className="mt-3 text-sm text-red-500">{error}</p>}

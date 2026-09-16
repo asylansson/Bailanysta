@@ -12,9 +12,6 @@ const primaryActive = "bg-violet-600 text-white shadow-sm";
 const primaryInactive =
   "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50";
 
-const labelClass =
-  "ml-0 max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:max-w-[10rem] group-hover:opacity-100";
-
 const iconBase =
   "flex items-center justify-center h-11 w-11 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
 const iconActive = "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100";
@@ -175,7 +172,6 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
               className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
             >
               <FeedIcon />
-              <span className={labelClass}>{t("nav.homeLabel")}</span>
             </NavLink>
             {currentUser && (
               <NavLink
@@ -184,7 +180,6 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
                 className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
               >
                 <MessagesIcon />
-                <span className={labelClass}>{t("nav.messages")}</span>
               </NavLink>
             )}
             <NavLink
@@ -193,7 +188,6 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
               className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
             >
               <CommunitiesIcon />
-              <span className={labelClass}>{t("nav.communities")}</span>
             </NavLink>
           </nav>
 
@@ -211,7 +205,7 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
                 {menuOpen && (
                   <>
                     <div className="fixed inset-0 z-10" onClick={closeMenu} />
-                    <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-violet-400 dark:border-violet-900 bg-white dark:bg-gray-800 shadow-lg py-1 z-20 overflow-hidden">
+                    <div className="dropdown-menu-enter absolute right-0 top-full mt-2 w-48 rounded-xl border border-violet-400 dark:border-violet-900 bg-white dark:bg-gray-800 shadow-lg py-1 z-20 overflow-hidden">
                       <Link to={`/u/${currentUser.handle}`} onClick={closeMenu} className={menuItemClass}>
                         {t("nav.profile")}
                       </Link>

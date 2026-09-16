@@ -1,24 +1,29 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import TopProgressBar from "./components/TopProgressBar.jsx";
 import Feed from "./pages/Feed.jsx";
 import ProfileGate from "./pages/ProfileGate.jsx";
-import OnboardingPage from "./pages/OnboardingPage.jsx";
-import UserProfile from "./pages/UserProfile.jsx";
-import PostDetail from "./pages/PostDetail.jsx";
-import NotificationsPage from "./pages/NotificationsPage.jsx";
-import MessagesPage from "./pages/MessagesPage.jsx";
-import ConversationPage from "./pages/ConversationPage.jsx";
-import CommunitiesPage from "./pages/CommunitiesPage.jsx";
-import CommunityDetail from "./pages/CommunityDetail.jsx";
-import SearchPage from "./pages/SearchPage.jsx";
-import SettingsPage from "./pages/SettingsPage.jsx";
 import { useAuth } from "./hooks/useAuth.js";
 import { useTheme } from "./hooks/useTheme.js";
 import { useLanguage } from "./hooks/useLanguage.js";
 import { setAuthToken, fetchMySettings } from "./api.js";
 import { I18nProvider } from "./i18n/I18nContext.jsx";
+import { PostSkeletonList } from "./components/Skeleton.jsx";
+
+// Feed and ProfileGate are the near-universal landing pages, loaded eagerly
+// above; everything else is fetched only when actually navigated to, keeping
+// the first paint's JS payload small.
+const OnboardingPage = lazy(() => import("./pages/OnboardingPage.jsx"));
+const UserProfile = lazy(() => import("./pages/UserProfile.jsx"));
+const PostDetail = lazy(() => import("./pages/PostDetail.jsx"));
+const NotificationsPage = lazy(() => import("./pages/NotificationsPage.jsx"));
+const MessagesPage = lazy(() => import("./pages/MessagesPage.jsx"));
+const ConversationPage = lazy(() => import("./pages/ConversationPage.jsx"));
+const CommunitiesPage = lazy(() => import("./pages/CommunitiesPage.jsx"));
+const CommunityDetail = lazy(() => import("./pages/CommunityDetail.jsx"));
+const SearchPage = lazy(() => import("./pages/SearchPage.jsx"));
+const SettingsPage = lazy(() => import("./pages/SettingsPage.jsx"));
 
 export default function App() {
   const { token, user, login, updateUser, logout } = useAuth();
@@ -81,35 +86,43 @@ export default function App() {
       <div className="min-h-screen bg-violet-50 dark:bg-gray-900">
         <TopProgressBar />
         <Navbar currentUser={user} theme={theme} onToggleTheme={toggleTheme} onLogout={logout} />
-        <Routes>
-          <Route path="/" element={<Navigate to="/home" replace />} />
-          <Route path="/home" element={<Feed currentUser={user} requireUser={requireUser} />} />
-          <Route path="/profile" element={<ProfileGate user={user} onLogin={login} />} />
-          <Route path="/onboarding" element={<OnboardingPage currentUser={user} onUserUpdate={updateUser} />} />
-          <Route
-            path="/u/:id"
-            element={
-              <UserProfile
-                currentUser={user}
-                requireUser={requireUser}
-                onLogout={logout}
-                theme={theme}
-                onToggleTheme={toggleTheme}
-              />
-            }
-          />
-          <Route path="/posts/:id" element={<PostDetail currentUser={user} requireUser={requireUser} />} />
-          <Route path="/notifications" element={<NotificationsPage currentUser={user} />} />
-          <Route path="/messages" element={<MessagesPage currentUser={user} />} />
-          <Route path="/messages/:userId" element={<ConversationPage currentUser={user} />} />
-          <Route path="/communities" element={<CommunitiesPage currentUser={user} requireUser={requireUser} />} />
-          <Route
-            path="/communities/:id"
-            element={<CommunityDetail currentUser={user} requireUser={requireUser} />}
-          />
-          <Route path="/search" element={<SearchPage currentUser={user} />} />
-          <Route path="/settings" element={<SettingsPage currentUser={user} onUserUpdate={updateUser} />} />
-        </Routes>
+        <Suspense
+          fallback={
+            <div className="mx-auto max-w-2xl px-4 py-6">
+              <PostSkeletonList count={1} />
+            </div>
+          }
+        >
+          <Routes>
+            <Route path="/" element={<Navigate to="/home" replace />} />
+            <Route path="/home" element={<Feed currentUser={user} requireUser={requireUser} />} />
+            <Route path="/profile" element={<ProfileGate user={user} onLogin={login} />} />
+            <Route path="/onboarding" element={<OnboardingPage currentUser={user} onUserUpdate={updateUser} />} />
+            <Route
+              path="/u/:id"
+              element={
+                <UserProfile
+                  currentUser={user}
+                  requireUser={requireUser}
+                  onLogout={logout}
+                  theme={theme}
+                  onToggleTheme={toggleTheme}
+                />
+              }
+            />
+            <Route path="/posts/:id" element={<PostDetail currentUser={user} requireUser={requireUser} />} />
+            <Route path="/notifications" element={<NotificationsPage currentUser={user} />} />
+            <Route path="/messages" element={<MessagesPage currentUser={user} />} />
+            <Route path="/messages/:userId" element={<ConversationPage currentUser={user} />} />
+            <Route path="/communities" element={<CommunitiesPage currentUser={user} requireUser={requireUser} />} />
+            <Route
+              path="/communities/:id"
+              element={<CommunityDetail currentUser={user} requireUser={requireUser} />}
+            />
+            <Route path="/search" element={<SearchPage currentUser={user} />} />
+            <Route path="/settings" element={<SettingsPage currentUser={user} onUserUpdate={updateUser} />} />
+          </Routes>
+        </Suspense>
       </div>
     </I18nProvider>
   );
