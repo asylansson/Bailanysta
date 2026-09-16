@@ -594,7 +594,7 @@ export const TRANSLATIONS = {
     },
     nav: {
       feed: "Feed",
-      homeLabel: "Home Page",
+      homeLabel: "Home",
       messages: "Messages",
       communities: "Communities",
       search: "Search",
@@ -659,7 +659,7 @@ export const TRANSLATIONS = {
       followers_few: "followers",
       followers_many: "followers",
       following: "following",
-      signOut: "Sign out",
+      signOut: "Log out",
       noPostsOwn: "You don't have any posts yet. Write your first one!",
       noPostsOther: "This user has no posts yet.",
       follow: "Follow",

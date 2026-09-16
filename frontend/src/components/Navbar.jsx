@@ -167,7 +167,7 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
             ))}
           </div>
 
-          <nav className="flex min-w-0 flex-1 items-center justify-center gap-1 sm:gap-2">
+          <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1 sm:gap-2">
             <NavLink
               to="/home"
               end
