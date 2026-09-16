@@ -5,7 +5,6 @@ import {
   serializePost,
   addNotification,
   canViewCommunityPosts,
-  findUserById,
   canViewUserContent,
   detectPostLanguage,
 } from "../helpers.js";
@@ -74,20 +73,14 @@ router.get("/", async (req, res) => {
     );
     sorted = sortByNewest(posts);
   } else {
-    // Recommendations tab (default, also for guests): all-time, ranked by the viewer's
-    // chosen interest topics first (each group most-liked first), then everything else.
-    // Private authors are excluded unless the viewer already follows them.
+    // Recommendations tab (default, also for guests): all-time, ranked purely by
+    // popularity for everyone - a logged-in viewer's interests no longer override
+    // this (they used to hard-partition matching-topic posts ahead of everything
+    // else, which could bury the single most-liked post on the site behind a
+    // barely-liked post that merely matched a topic). Private authors are
+    // excluded unless the viewer already follows them.
     posts = db.posts.filter((p) => !p.communityId && canViewUserContent(db, p.authorId, req.user?.id));
-
-    const viewer = req.user ? findUserById(db, req.user.id) : null;
-    const interests = viewer?.interests || [];
-    if (interests.length > 0) {
-      const matching = posts.filter((p) => p.topic && interests.includes(p.topic));
-      const rest = posts.filter((p) => !(p.topic && interests.includes(p.topic)));
-      sorted = [...sortByHot(matching), ...sortByHot(rest)];
-    } else {
-      sorted = sortByHot(posts);
-    }
+    sorted = sortByHot(posts);
   }
 
   if (q && q.trim()) {
