@@ -8,9 +8,9 @@ import BackHomeButton from "../components/BackHomeButton.jsx";
 import TopicsPicker from "../components/TopicsPicker.jsx";
 
 const LANGUAGES = [
+  { code: "en", key: "languageEn" },
   { code: "kk", key: "languageKk" },
   { code: "ru", key: "languageRu" },
-  { code: "en", key: "languageEn" },
 ];
 
 export default function SettingsPage({ currentUser, onUserUpdate }) {
