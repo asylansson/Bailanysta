@@ -141,7 +141,10 @@ export default function ConversationPage({ currentUser }) {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-6 flex flex-col" style={{ minHeight: "calc(100vh - 64px)" }}>
+    <div
+      className="mx-auto max-w-2xl px-4 py-6 flex flex-col overflow-hidden"
+      style={{ height: "calc(100vh - 120px)" }}
+    >
       <div className="relative flex items-center gap-3 mb-4 pl-12">
         <BackHomeButton />
         <Link to={`/u/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
