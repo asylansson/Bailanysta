@@ -14,6 +14,8 @@ import BackHomeButton from "../components/BackHomeButton.jsx";
 import { ChatSkeleton } from "../components/Skeleton.jsx";
 import { formatTime } from "../formatDate.js";
 
+const POLL_INTERVAL_MS = 4000;
+
 export default function ConversationPage({ currentUser }) {
   const { userId } = useParams();
   const navigate = useNavigate();
@@ -55,6 +57,29 @@ export default function ConversationPage({ currentUser }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ block: "end" });
   }, [messages]);
+
+  // The initial load effect above only fetches once - without this, a message
+  // the other person sends while you're already looking at the conversation
+  // stays invisible until you leave and come back in (which re-triggers it).
+  useEffect(() => {
+    if (!currentUser || !isMutualFriend) return;
+    let cancelled = false;
+    const interval = setInterval(async () => {
+      try {
+        const msgs = await fetchConversationMessages(userId);
+        if (!cancelled) {
+          setMessages(msgs);
+          markConversationRead(userId).catch(() => {});
+        }
+      } catch {
+        // transient network error - keep showing what we already have
+      }
+    }, POLL_INTERVAL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
+  }, [currentUser, userId, isMutualFriend]);
 
   async function handleSend(e) {
     e.preventDefault();
