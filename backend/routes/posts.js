@@ -47,8 +47,14 @@ router.get("/", async (req, res) => {
   let sorted;
   if (communityId) {
     const community = db.communities.find((c) => c.id === communityId);
-    if (!community || !canViewCommunityPosts(db, community, req.user?.id)) {
+    if (!community) {
       return res.status(404).json({ error: "Community not found" });
+    }
+    if (!canViewCommunityPosts(db, community, req.user?.id)) {
+      // Private community the viewer isn't a member of yet: the community's own
+      // page (name, description, member count) is always visible, only its
+      // posts are gated - so respond with an empty list rather than a 404.
+      return res.json([]);
     }
     posts = db.posts.filter((p) => p.communityId === communityId);
     sorted = sortByNewest(posts);

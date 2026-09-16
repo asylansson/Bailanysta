@@ -173,9 +173,11 @@ export default function CommunityDetail({ currentUser, requireUser }) {
         {!community.isAdmin && (
           <button
             onClick={community.isMember ? handleLeave : handleJoinClick}
-            disabled={busy}
-            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-40 ${
-              community.isMember || community.joinRequestPending
+            disabled={busy || community.joinRequestPending}
+            className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors disabled:opacity-100 disabled:cursor-default ${
+              community.joinRequestPending
+                ? "border border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-950/40 text-green-600 dark:text-green-400"
+                : community.isMember
                 ? "border border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950"
                 : "bg-violet-600 text-white hover:bg-violet-700"
             }`}
@@ -211,7 +213,13 @@ export default function CommunityDetail({ currentUser, requireUser }) {
         </div>
       )}
 
-      {posts.length === 0 && <p className="text-gray-500 dark:text-gray-400">{t("communities.noPosts")}</p>}
+      {posts.length === 0 && (
+        <p className="text-gray-500 dark:text-gray-400">
+          {community.visibility === "private" && !community.isMember
+            ? t("communities.postsLocked")
+            : t("communities.noPosts")}
+        </p>
+      )}
 
       <div className="space-y-3">
         {posts.map((post) => (
