@@ -53,7 +53,7 @@ export default function CommunitySuggestionsModal({ onClose }) {
             list.map((c) => (
               <Link
                 key={c.id}
-                to={`/communities/${c.id}`}
+                to={`/communities/${c.handle}`}
                 onClick={onClose}
                 className="flex items-center justify-between gap-2 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >

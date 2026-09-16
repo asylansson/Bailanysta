@@ -142,7 +142,7 @@ export default function SearchPage({ currentUser }) {
                 {results.communities.map((c) => (
                   <Link
                     key={c.id}
-                    to={`/communities/${c.id}`}
+                    to={`/communities/${c.handle}`}
                     className="block bg-white dark:bg-gray-800 rounded-xl border border-violet-400 dark:border-violet-900 shadow-sm p-3 hover:border-violet-300 dark:hover:border-violet-700 transition-colors"
                   >
                     <p className="font-semibold text-gray-900 dark:text-gray-100">{c.name}</p>

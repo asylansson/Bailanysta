@@ -9,7 +9,7 @@ export default function ProfileGate({ user, onLogin }) {
   const [error, setError] = useState("");
 
   if (user) {
-    return <Navigate to={user.onboarded ? `/u/${user.id}` : "/onboarding"} replace />;
+    return <Navigate to={user.onboarded ? `/u/${user.handle}` : "/onboarding"} replace />;
   }
 
   async function handleSuccess(credentialResponse) {

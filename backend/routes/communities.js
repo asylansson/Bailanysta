@@ -7,6 +7,7 @@ import {
   serializeUserSummary,
   findUserById,
   findCommunityByNickname,
+  findCommunityByHandleOrId,
   addNotification,
 } from "../helpers.js";
 import { requireAuth } from "../auth.js";
@@ -72,10 +73,10 @@ router.get("/suggestions", async (req, res) => {
   res.json(sorted.map((c) => serializeCommunity(db, c, viewerId)));
 });
 
-// GET /api/communities/:id - detail (404 if not visible to the viewer)
+// GET /api/communities/:id - detail (accepts canonical id or nickname); 404 if not visible
 router.get("/:id", async (req, res) => {
   const db = await readDB();
-  const community = db.communities.find((c) => c.id === req.params.id);
+  const community = findCommunityByHandleOrId(db, req.params.id);
   if (!community || !visibleTo(db, community, req.user?.id)) {
     return res.status(404).json({ error: "Community not found" });
   }

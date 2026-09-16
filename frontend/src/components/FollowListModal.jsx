@@ -58,7 +58,7 @@ export default function FollowListModal({ userId, mode, onClose }) {
             list.map((u) => (
               <Link
                 key={u.id}
-                to={`/u/${u.id}`}
+                to={`/u/${u.handle}`}
                 onClick={onClose}
                 className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
               >

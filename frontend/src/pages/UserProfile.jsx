@@ -14,9 +14,8 @@ const toolbarIconClass =
   "flex items-center justify-center h-10 w-10 rounded-lg text-violet-600 dark:text-violet-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
 
 export default function UserProfile({ currentUser, requireUser, onLogout, theme, onToggleTheme }) {
-  const { id } = useParams();
+  const { id: handle } = useParams();
   const { t, tp } = useI18n();
-  const isOwnProfile = currentUser?.id === id;
 
   const [profile, setProfile] = useState(null);
   const [posts, setPosts] = useState([]);
@@ -24,12 +23,15 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
   const [followBusy, setFollowBusy] = useState(false);
   const [listModal, setListModal] = useState(null); // null | "followers" | "following" | "communities" | "requests"
   const [requestCount, setRequestCount] = useState(0);
+  const isOwnProfile = !!(profile && currentUser && profile.id === currentUser.id);
 
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
-    Promise.all([fetchUserProfile(id), fetchPostsByAuthor(id)])
-      .then(([profileData, postsData]) => {
+    fetchUserProfile(handle)
+      .then(async (profileData) => {
+        if (cancelled) return;
+        const postsData = await fetchPostsByAuthor(profileData.id);
         if (!cancelled) {
           setProfile(profileData);
           setPosts(postsData);
@@ -40,7 +42,7 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
     return () => {
       cancelled = true;
     };
-  }, [id, currentUser]);
+  }, [handle, currentUser]);
 
   useEffect(() => {
     if (!isOwnProfile) return;
@@ -51,7 +53,7 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
     return () => {
       cancelled = true;
     };
-  }, [isOwnProfile, id]);
+  }, [isOwnProfile, handle]);
 
   async function handleLikeToggle(postId) {
     const updated = await toggleLikePost(postId);
@@ -67,8 +69,8 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
     if (!requireUser()) return;
     setFollowBusy(true);
     try {
-      await toggleFollow(id);
-      const [profileData, postsData] = await Promise.all([fetchUserProfile(id), fetchPostsByAuthor(id)]);
+      await toggleFollow(profile.id);
+      const [profileData, postsData] = await Promise.all([fetchUserProfile(handle), fetchPostsByAuthor(profile.id)]);
       setProfile(profileData);
       setPosts(postsData);
     } finally {
@@ -142,7 +144,7 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
         <div className="flex items-center gap-3">
           {!isOwnProfile && profile.isMutualFriend && (
             <Link
-              to={`/messages/${id}`}
+              to={`/messages/${profile.id}`}
               className="px-4 py-1.5 rounded-lg text-sm font-medium border border-violet-300 dark:border-violet-700 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950 transition-colors"
             >
               {t("profile.message")}
@@ -221,9 +223,9 @@ export default function UserProfile({ currentUser, requireUser, onLogout, theme,
       )}
 
       {(listModal === "followers" || listModal === "following") && (
-        <FollowListModal userId={id} mode={listModal} onClose={() => setListModal(null)} />
+        <FollowListModal userId={profile.id} mode={listModal} onClose={() => setListModal(null)} />
       )}
-      {listModal === "communities" && <CommunityListModal userId={id} onClose={() => setListModal(null)} />}
+      {listModal === "communities" && <CommunityListModal userId={profile.id} onClose={() => setListModal(null)} />}
       {listModal === "requests" && (
         <FollowRequestsModal
           onClose={() => setListModal(null)}

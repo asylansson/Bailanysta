@@ -21,7 +21,7 @@ export default function OnboardingPage({ currentUser, onUserUpdate }) {
     return <Navigate to="/profile" replace />;
   }
   if (currentUser.onboarded) {
-    return <Navigate to={`/u/${currentUser.id}`} replace />;
+    return <Navigate to={`/u/${currentUser.handle}`} replace />;
   }
 
   async function finish(patch) {
@@ -30,7 +30,7 @@ export default function OnboardingPage({ currentUser, onUserUpdate }) {
     try {
       const updated = await updateMySettings({ ...patch, onboarded: true });
       onUserUpdate(updated);
-      navigate(`/u/${currentUser.id}`, { replace: true });
+      navigate(`/u/${updated.handle}`, { replace: true });
     } catch (err) {
       setError(err.message);
       setSaving(false);

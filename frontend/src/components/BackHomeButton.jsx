@@ -10,7 +10,7 @@ export default function BackHomeButton() {
     // if this page was opened directly (no history to go back to, e.g. a
     // fresh tab or a shared link).
     if (window.history.length > 1) navigate(-1);
-    else navigate("/");
+    else navigate("/home");
   }
 
   return (

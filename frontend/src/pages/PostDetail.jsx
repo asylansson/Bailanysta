@@ -83,7 +83,7 @@ export default function PostDetail({ currentUser, requireUser }) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-6">
         <p className="text-red-500">{t("postDetail.notFound")}</p>
-        <Link to="/" className="text-violet-600 dark:text-violet-400 hover:underline">
+        <Link to="/home" className="text-violet-600 dark:text-violet-400 hover:underline">
           {t("postDetail.backToFeed")}
         </Link>
       </div>
@@ -92,7 +92,7 @@ export default function PostDetail({ currentUser, requireUser }) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
-      <Link to="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400">
+      <Link to="/home" className="text-sm text-gray-500 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400">
         {t("postDetail.backToFeed")}
       </Link>
 

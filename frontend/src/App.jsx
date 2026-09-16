@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar.jsx";
 import TopProgressBar from "./components/TopProgressBar.jsx";
 import Feed from "./pages/Feed.jsx";
@@ -76,7 +76,8 @@ export default function App() {
         <TopProgressBar />
         <Navbar currentUser={user} />
         <Routes>
-          <Route path="/" element={<Feed currentUser={user} requireUser={requireUser} />} />
+          <Route path="/" element={<Navigate to="/home" replace />} />
+          <Route path="/home" element={<Feed currentUser={user} requireUser={requireUser} />} />
           <Route path="/profile" element={<ProfileGate user={user} onLogin={login} />} />
           <Route path="/onboarding" element={<OnboardingPage currentUser={user} onUserUpdate={updateUser} />} />
           <Route

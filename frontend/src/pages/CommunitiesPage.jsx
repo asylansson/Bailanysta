@@ -217,7 +217,7 @@ export default function CommunitiesPage({ currentUser, requireUser }) {
           {communities.map((c) => (
             <Link
               key={c.id}
-              to={`/communities/${c.id}`}
+              to={`/communities/${c.handle}`}
               className="block bg-white dark:bg-gray-800 rounded-xl border border-violet-400 dark:border-violet-900 shadow-sm p-4 hover:border-violet-300 dark:hover:border-violet-700 transition-colors"
             >
               <div className="flex items-baseline gap-2 flex-wrap">

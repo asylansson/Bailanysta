@@ -24,7 +24,7 @@ const elegantButtonClass =
   "px-3 py-1 rounded-full border border-violet-300 dark:border-violet-700 text-xs font-medium text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-950 transition-colors";
 
 export default function CommunityDetail({ currentUser, requireUser }) {
-  const { id } = useParams();
+  const { id: handle } = useParams();
   const navigate = useNavigate();
   const { t, tp } = useI18n();
   const [community, setCommunity] = useState(null);
@@ -37,8 +37,10 @@ export default function CommunityDetail({ currentUser, requireUser }) {
   useEffect(() => {
     let cancelled = false;
     setStatus("loading");
-    Promise.all([fetchCommunity(id), fetchCommunityPosts(id)])
-      .then(([communityData, postsData]) => {
+    fetchCommunity(handle)
+      .then(async (communityData) => {
+        if (cancelled) return;
+        const postsData = await fetchCommunityPosts(communityData.id);
         if (!cancelled) {
           setCommunity(communityData);
           setPosts(postsData);
@@ -49,24 +51,24 @@ export default function CommunityDetail({ currentUser, requireUser }) {
     return () => {
       cancelled = true;
     };
-  }, [id, currentUser]);
+  }, [handle, currentUser]);
 
   useEffect(() => {
     if (!community?.isAdmin || community.visibility !== "private") return;
     let cancelled = false;
-    fetchCommunityJoinRequests(id)
+    fetchCommunityJoinRequests(community.id)
       .then((data) => !cancelled && setRequestCount(data.length))
       .catch(() => {});
     return () => {
       cancelled = true;
     };
-  }, [id, community?.isAdmin, community?.visibility]);
+  }, [community?.id, community?.isAdmin, community?.visibility]);
 
   async function handleJoinClick() {
     if (!requireUser()) return;
     setBusy(true);
     try {
-      const updated = await joinCommunity(id);
+      const updated = await joinCommunity(community.id);
       setCommunity(updated);
     } finally {
       setBusy(false);
@@ -76,7 +78,7 @@ export default function CommunityDetail({ currentUser, requireUser }) {
   async function handleLeave() {
     setBusy(true);
     try {
-      const updated = await leaveCommunity(id);
+      const updated = await leaveCommunity(community.id);
       setCommunity(updated);
     } finally {
       setBusy(false);
@@ -86,7 +88,7 @@ export default function CommunityDetail({ currentUser, requireUser }) {
   async function handleDelete() {
     setBusy(true);
     try {
-      await deleteCommunity(id);
+      await deleteCommunity(community.id);
       navigate("/communities", { replace: true });
     } finally {
       setBusy(false);
@@ -95,7 +97,7 @@ export default function CommunityDetail({ currentUser, requireUser }) {
   }
 
   async function handleCreate({ text }) {
-    const post = await createPost({ text, communityId: id });
+    const post = await createPost({ text, communityId: community.id });
     setPosts((prev) => [post, ...prev]);
   }
 
@@ -235,11 +237,11 @@ export default function CommunityDetail({ currentUser, requireUser }) {
       </div>
 
       {modal === "members" && (
-        <CommunityMembersModal communityId={id} isAdmin={community.isAdmin} onClose={() => setModal(null)} />
+        <CommunityMembersModal communityId={community.id} isAdmin={community.isAdmin} onClose={() => setModal(null)} />
       )}
       {modal === "requests" && (
         <CommunityJoinRequestsModal
-          communityId={id}
+          communityId={community.id}
           onClose={() => setModal(null)}
           onChange={() => setRequestCount((c) => Math.max(0, c - 1))}
         />

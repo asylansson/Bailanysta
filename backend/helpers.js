@@ -11,6 +11,50 @@ export function findUserByNickname(db, nickname) {
   return db.users.find((u) => u.nickname && u.nickname.toLowerCase() === normalized) || null;
 }
 
+function nextPublicUserId(db) {
+  return db.users.reduce((max, u) => Math.max(max, u.publicId || 0), 0) + 1;
+}
+
+// The short id shown in a user's profile URL: their nickname (without the
+// leading @) when they've set one, otherwise a small sequential number -
+// either way, never the raw UUID `id`, which is what a real Google-linked
+// account gets internally.
+export function userHandle(user) {
+  if (!user) return null;
+  if (user.nickname) return user.nickname.replace(/^@/, "");
+  return String(user.publicId ?? user.id);
+}
+
+export function communityHandle(community) {
+  if (!community) return null;
+  return (community.nickname || "").replace(/^@/, "");
+}
+
+// Resolves a URL segment that may be a canonical id, a nickname (with or
+// without @), or a numeric publicId - used only by the "detail" endpoints
+// that a profile/community link actually navigates to.
+export function findUserByHandleOrId(db, param) {
+  if (!param) return null;
+  const byId = findUserById(db, param);
+  if (byId) return byId;
+  const normalized = param.trim().toLowerCase();
+  const byNickname = db.users.find((u) => u.nickname && u.nickname.replace(/^@/, "").toLowerCase() === normalized);
+  if (byNickname) return byNickname;
+  if (/^\d+$/.test(param)) {
+    const num = Number(param);
+    return db.users.find((u) => u.publicId === num) || null;
+  }
+  return null;
+}
+
+export function findCommunityByHandleOrId(db, param) {
+  if (!param) return null;
+  const byId = db.communities.find((c) => c.id === param);
+  if (byId) return byId;
+  const normalized = param.trim().toLowerCase();
+  return db.communities.find((c) => c.nickname && c.nickname.replace(/^@/, "").toLowerCase() === normalized) || null;
+}
+
 export function getOrCreateGoogleUser(db, { googleId, email, name, givenName, familyName, picture }) {
   let user = db.users.find((u) => u.email === email);
   if (user) {
@@ -32,6 +76,7 @@ export function getOrCreateGoogleUser(db, { googleId, email, name, givenName, fa
     interests: [],
     onboarded: false,
     isPrivate: false,
+    publicId: nextPublicUserId(db),
   };
   db.users.push(user);
   return user;
@@ -68,6 +113,7 @@ function authorFields(db, authorId) {
     authorName: author ? displayName(author) : "Удалённый пользователь",
     authorPicture: author ? author.picture : null,
     authorAvatarPreset: author ? author.avatarPreset : null,
+    authorHandle: author ? userHandle(author) : null,
   };
 }
 
@@ -150,10 +196,12 @@ export function serializeNotification(db, notification) {
     actorName: actor ? displayName(actor) : "Удалённый пользователь",
     actorPicture: actor ? actor.picture : null,
     actorAvatarPreset: actor ? actor.avatarPreset : null,
+    actorHandle: actor ? userHandle(actor) : null,
     postId: notification.postId,
     commentId: notification.commentId,
     communityId: notification.communityId,
     communityName: community ? community.name : null,
+    communityHandle: community ? communityHandle(community) : null,
     createdAt: notification.createdAt,
     read: notification.read,
   };
@@ -162,6 +210,7 @@ export function serializeNotification(db, notification) {
 export function serializeMe(user) {
   return {
     id: user.id,
+    handle: userHandle(user),
     name: displayName(user),
     firstName: user.firstName || "",
     lastName: user.lastName || "",
@@ -185,6 +234,7 @@ export function serializeUserSummary(db, user, viewerId) {
     : false;
   return {
     id: user.id,
+    handle: userHandle(user),
     name: displayName(user),
     nickname: user.nickname,
     picture: user.picture,
@@ -235,6 +285,7 @@ export function serializeCommunity(db, community, viewerId) {
     : false;
   return {
     id: community.id,
+    handle: communityHandle(community),
     name: community.name,
     nickname: community.nickname || null,
     description: community.description,

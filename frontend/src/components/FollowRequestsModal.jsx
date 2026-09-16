@@ -76,7 +76,7 @@ export default function FollowRequestsModal({ onClose, onChange }) {
           {status === "ready" &&
             list.map((r) => (
               <div key={r.id} className="flex items-center gap-3 p-2 rounded-lg">
-                <Link to={`/u/${r.requester.id}`} onClick={onClose} className="flex items-center gap-3 min-w-0 flex-1">
+                <Link to={`/u/${r.requester.handle}`} onClick={onClose} className="flex items-center gap-3 min-w-0 flex-1">
                   <Avatar name={r.requester.name} picture={r.requester.picture} presetId={r.requester.avatarPreset} size="sm" />
                   <div className="min-w-0">
                     <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{r.requester.name}</p>

@@ -153,7 +153,7 @@ export default function Navbar({ currentUser }) {
 
           <nav className="flex min-w-0 flex-1 items-center justify-center gap-1 sm:gap-2">
             <NavLink
-              to="/"
+              to="/home"
               end
               title={t("nav.feed")}
               className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}

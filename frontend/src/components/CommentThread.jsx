@@ -27,7 +27,7 @@ function CommentNode({ comment, currentUser, onReply, onLike, requireUser }) {
         <div className="bg-gray-50 dark:bg-gray-800/60 rounded-xl px-3 py-2">
           <div className="flex items-start justify-between gap-2">
             <Link
-              to={`/u/${comment.authorId}`}
+              to={`/u/${comment.authorHandle}`}
               className="font-semibold text-sm text-gray-900 dark:text-gray-100 hover:text-violet-600 dark:hover:text-violet-400 truncate"
             >
               {comment.authorName}

@@ -61,7 +61,7 @@ export default function CommunityMembersModal({ communityId, isAdmin, onClose })
           {status === "ready" &&
             list.map((u) => (
               <div key={u.id} className="flex items-center gap-3 p-2 rounded-lg">
-                <Link to={`/u/${u.id}`} onClick={onClose} className="flex items-center gap-3 min-w-0 flex-1">
+                <Link to={`/u/${u.handle}`} onClick={onClose} className="flex items-center gap-3 min-w-0 flex-1">
                   <Avatar name={u.name} picture={u.picture} presetId={u.avatarPreset} size="sm" />
                   <div className="min-w-0">
                     <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{u.name}</p>

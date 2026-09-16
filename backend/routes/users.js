@@ -4,6 +4,8 @@ import { readDB, withDB } from "../db.js";
 import {
   findUserById,
   findUserByNickname,
+  findUserByHandleOrId,
+  userHandle,
   addNotification,
   displayName,
   isMutualFollow,
@@ -171,10 +173,10 @@ router.patch("/me", requireAuth, async (req, res) => {
   res.json(result.payload);
 });
 
-// GET /api/users/:id - public profile summary
+// GET /api/users/:id - public profile summary (accepts canonical id, nickname, or publicId)
 router.get("/:id", async (req, res) => {
   const db = await readDB();
-  const user = findUserById(db, req.params.id);
+  const user = findUserByHandleOrId(db, req.params.id);
   if (!user) return res.status(404).json({ error: "User not found" });
 
   const viewerId = req.user?.id;
@@ -195,6 +197,7 @@ router.get("/:id", async (req, res) => {
 
   res.json({
     id: user.id,
+    handle: userHandle(user),
     name: displayName(user),
     nickname: user.nickname,
     picture: user.picture,

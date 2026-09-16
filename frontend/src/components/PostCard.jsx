@@ -45,13 +45,13 @@ export default function PostCard({ post, currentUser, onLikeToggle, onEdited, re
 
   return (
     <article className="bg-white dark:bg-gray-800 rounded-xl border border-violet-400 dark:border-violet-900 shadow-sm p-4 flex gap-3">
-      <Link to={`/u/${post.authorId}`} className="shrink-0">
+      <Link to={`/u/${post.authorHandle}`} className="shrink-0">
         <Avatar name={post.authorName} picture={post.authorPicture} presetId={post.authorAvatarPreset} />
       </Link>
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <Link
-            to={`/u/${post.authorId}`}
+            to={`/u/${post.authorHandle}`}
             className="font-semibold text-gray-900 dark:text-gray-100 hover:text-violet-600 dark:hover:text-violet-400 truncate"
           >
             {post.authorName}

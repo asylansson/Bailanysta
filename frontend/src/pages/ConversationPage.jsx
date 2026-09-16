@@ -147,7 +147,7 @@ export default function ConversationPage({ currentUser }) {
     >
       <div className="relative flex items-center gap-3 mb-4 pl-12">
         <BackHomeButton />
-        <Link to={`/u/${otherUser.id}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+        <Link to={`/u/${otherUser.handle}`} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <Avatar name={otherUser.name} picture={otherUser.picture} presetId={otherUser.avatarPreset} />
           <h1 className="text-lg font-bold text-gray-900 dark:text-gray-100">{otherUser.name}</h1>
         </Link>

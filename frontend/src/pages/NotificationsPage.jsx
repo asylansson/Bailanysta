@@ -78,9 +78,9 @@ export default function NotificationsPage({ currentUser }) {
           const linkTo = n.postId
             ? `/posts/${n.postId}`
             : n.type === "follow" || n.type === "follow_request" || n.type === "follow_accepted"
-            ? `/u/${n.actorId}`
+            ? `/u/${n.actorHandle}`
             : n.communityId
-            ? `/communities/${n.communityId}`
+            ? `/communities/${n.communityHandle}`
             : null;
 
           return linkTo ? (

@@ -9,6 +9,7 @@ try {
 
 import express from "express";
 import cors from "cors";
+import { withDB } from "./db.js";
 import authRouter from "./routes/auth.js";
 import postsRouter from "./routes/posts.js";
 import postCommentsRouter from "./routes/postComments.js";
@@ -46,6 +47,16 @@ app.use("/api/notifications", notificationsRouter);
 app.use("/api/conversations", messagesRouter);
 app.use("/api/communities", communitiesRouter);
 app.use("/api/search", searchRouter);
+
+// One-time migration: every user needs a small sequential publicId, used as
+// their profile URL when they haven't set a nickname (accounts created
+// before this field existed won't have one yet).
+await withDB((db) => {
+  let nextId = db.users.reduce((max, u) => Math.max(max, u.publicId || 0), 0) + 1;
+  for (const user of db.users) {
+    if (!user.publicId) user.publicId = nextId++;
+  }
+});
 
 app.listen(PORT, () => {
   console.log(`Bailanysta API listening on http://localhost:${PORT}`);
