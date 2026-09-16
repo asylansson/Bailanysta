@@ -316,8 +316,8 @@ export const TRANSLATIONS = {
       profile: "Профиль",
       googleSignIn: "Кіру",
       settings: "Баптаулар",
-      lightTheme: "Ашық тақырыпты қосу",
-      darkTheme: "Күңгірт тақырыпты қосу",
+      lightTheme: "Ашық режим қосу",
+      darkTheme: "Қараңғы режим қосу",
       searchPlaceholder: "Посттар мен #хэштег бойынша іздеу...",
     },
     profileGate: {
