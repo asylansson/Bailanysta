@@ -172,18 +172,16 @@ export default function CommunitiesPage({ currentUser, requireUser }) {
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
-      <div className="flex flex-col items-center gap-2 mb-4 sm:relative sm:flex-row sm:justify-center">
+      <div className="relative flex items-center justify-center mb-4">
         <h1 className="page-title text-xl font-bold tracking-tight text-violet-700 dark:text-violet-300">
           {t("communities.title")}
         </h1>
-        <div className="flex items-center gap-2 sm:contents">
-          <button onClick={handleFindClick} className={`${elegantButtonClass} sm:absolute sm:left-0`}>
-            {t("communities.findCommunities")}
-          </button>
-          <button onClick={handleCreateClick} className={`${elegantButtonClass} sm:absolute sm:right-0`}>
-            {t("communities.create")}
-          </button>
-        </div>
+        <button onClick={handleFindClick} className={`absolute left-0 ${elegantButtonClass}`}>
+          {t("communities.findCommunities")}
+        </button>
+        <button onClick={handleCreateClick} className={`absolute right-0 ${elegantButtonClass}`}>
+          {t("communities.create")}
+        </button>
       </div>
 
       <div className="relative mb-4">
