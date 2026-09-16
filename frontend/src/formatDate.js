@@ -1,10 +1,15 @@
-const LOCALES = { ru: "ru-RU", kk: "kk-KZ", en: "en-US" };
+function pad2(n) {
+  return String(n).padStart(2, "0");
+}
 
-export function formatTime(iso, language) {
-  return new Date(iso).toLocaleTimeString(LOCALES[language] || "ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+// Hand-rolled instead of toLocaleTimeString/toLocaleDateString: browser ICU
+// data doesn't reliably support short month names or 24h-vs-12h conventions
+// for every locale (kk-KZ in particular falls back to an ugly "M09" instead
+// of a month name), so relying on it gives a different look per language.
+// A fixed numeric format looks identical - and stays readable - everywhere.
+export function formatTime(iso) {
+  const date = new Date(iso);
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
 }
 
 function isSameCalendarDay(a, b) {
@@ -29,13 +34,10 @@ export function formatRelativeTime(iso, language, t, tp) {
   const yesterday = new Date(now);
   yesterday.setDate(now.getDate() - 1);
   if (isSameCalendarDay(date, yesterday)) {
-    return `${t("time.yesterday")}, ${formatTime(iso, language)}`;
+    return `${t("time.yesterday")}, ${formatTime(iso)}`;
   }
 
-  const locale = LOCALES[language] || "ru-RU";
   const sameYear = date.getFullYear() === now.getFullYear();
-  return date.toLocaleDateString(
-    locale,
-    sameYear ? { day: "numeric", month: "short" } : { day: "numeric", month: "short", year: "numeric" }
-  );
+  const dayMonth = `${pad2(date.getDate())}.${pad2(date.getMonth() + 1)}`;
+  return sameYear ? dayMonth : `${dayMonth}.${date.getFullYear()}`;
 }

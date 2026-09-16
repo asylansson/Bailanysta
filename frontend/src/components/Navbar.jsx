@@ -3,7 +3,7 @@ import Avatar from "./Avatar.jsx";
 import { useI18n } from "../i18n/I18nContext.jsx";
 
 const primaryBase =
-  "group relative flex h-12 min-w-[4rem] shrink-0 items-center justify-center overflow-hidden rounded-xl px-3 transition-colors duration-300";
+  "group relative flex h-11 min-w-[2.75rem] sm:h-12 sm:min-w-[4rem] shrink-0 items-center justify-center overflow-hidden rounded-xl px-2 sm:px-3 transition-colors duration-300";
 const primaryActive = "bg-violet-600 text-white shadow-sm";
 const primaryInactive =
   "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50";
@@ -132,8 +132,8 @@ export default function Navbar({ currentUser }) {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex h-14 max-w-2xl items-center px-4 py-2.5">
-          <div className="absolute left-4 flex items-center gap-0.5">
+        <div className="relative z-10 mx-auto flex h-14 max-w-2xl items-center justify-between gap-1 px-3 py-2.5 sm:px-4">
+          <div className="flex shrink-0 items-center gap-0.5">
             {LANGUAGES.map((l) => (
               <button
                 key={l.code}
@@ -151,7 +151,7 @@ export default function Navbar({ currentUser }) {
             ))}
           </div>
 
-          <nav className="absolute left-1/2 flex w-1/3 min-w-fit -translate-x-1/2 items-center justify-between">
+          <nav className="flex min-w-0 flex-1 items-center justify-center gap-1 sm:gap-2">
             <NavLink
               to="/"
               end
@@ -181,7 +181,7 @@ export default function Navbar({ currentUser }) {
             </NavLink>
           </nav>
 
-          <div className="absolute right-4 flex items-center gap-1">
+          <div className="flex shrink-0 items-center gap-1">
             {currentUser ? (
               <NavLink
                 to="/profile"

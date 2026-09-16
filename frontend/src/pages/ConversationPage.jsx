@@ -19,7 +19,7 @@ const POLL_INTERVAL_MS = 4000;
 export default function ConversationPage({ currentUser }) {
   const { userId } = useParams();
   const navigate = useNavigate();
-  const { t, language } = useI18n();
+  const { t } = useI18n();
   const [status, setStatus] = useState("loading");
   const [otherUser, setOtherUser] = useState(null);
   const [isMutualFriend, setIsMutualFriend] = useState(false);
@@ -188,7 +188,7 @@ export default function ConversationPage({ currentUser }) {
                   >
                     <p className="whitespace-pre-wrap break-words">{m.text}</p>
                     <span className={`block mt-1 text-[10px] ${mine ? "text-violet-200" : "text-gray-400"}`}>
-                      {formatTime(m.createdAt, language)}
+                      {formatTime(m.createdAt)}
                     </span>
                   </div>
                 </div>
