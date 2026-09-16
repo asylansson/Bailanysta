@@ -12,6 +12,9 @@ const primaryActive = "bg-violet-600 text-white shadow-sm";
 const primaryInactive =
   "bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50";
 
+const labelClass =
+  "ml-0 max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold opacity-0 transition-all duration-300 group-hover:ml-2 group-hover:max-w-[10rem] group-hover:opacity-100";
+
 const iconBase =
   "flex items-center justify-center h-11 w-11 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors";
 const iconActive = "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100";
@@ -164,7 +167,14 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
             ))}
           </div>
 
-          <nav className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1 sm:gap-2">
+          {/* max-width shrinks with the viewport (never past what's safely clear of the
+              side buttons) and overflow-hidden crops anything that would grow past it -
+              an invisible boundary so the hover-expanding labels below can never visually
+              collide with the language switcher or the avatar/login button on either side. */}
+          <nav
+            className="absolute left-1/2 flex -translate-x-1/2 items-center gap-1 overflow-hidden sm:gap-2"
+            style={{ maxWidth: "calc(100vw - 18rem)" }}
+          >
             <NavLink
               to="/home"
               end
@@ -172,6 +182,7 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
               className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
             >
               <FeedIcon />
+              <span className={labelClass}>{t("nav.homeLabel")}</span>
             </NavLink>
             {currentUser && (
               <NavLink
@@ -180,6 +191,7 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
                 className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
               >
                 <MessagesIcon />
+                <span className={labelClass}>{t("nav.messages")}</span>
               </NavLink>
             )}
             <NavLink
@@ -188,6 +200,7 @@ export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) 
               className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
             >
               <CommunitiesIcon />
+              <span className={labelClass}>{t("nav.communities")}</span>
             </NavLink>
           </nav>
 
