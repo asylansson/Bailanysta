@@ -1,0 +1,131 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-violet-50 text-gray-800 antialiased dark:bg-gray-900 dark:text-gray-100;
+  font-family: "Segoe UI", ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+.brand-wordmark,
+.page-title {
+  font-family: "Poppins", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes aurora-drift-1 {
+  0%,
+  100% {
+    transform: translate(-8%, -6%) scale(1);
+  }
+  50% {
+    transform: translate(12%, 10%) scale(1.2);
+  }
+}
+
+@keyframes aurora-drift-2 {
+  0%,
+  100% {
+    transform: translate(6%, 8%) scale(1);
+  }
+  50% {
+    transform: translate(-14%, -8%) scale(1.15);
+  }
+}
+
+@keyframes aurora-drift-3 {
+  0%,
+  100% {
+    transform: translate(-50%, 6%) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -10%) scale(1.25);
+  }
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(28px);
+}
+
+.aurora-blob-1 {
+  animation: aurora-drift-1 10s ease-in-out infinite;
+}
+
+.aurora-blob-2 {
+  animation: aurora-drift-2 12s ease-in-out infinite;
+}
+
+.aurora-blob-3 {
+  animation: aurora-drift-3 14s ease-in-out infinite;
+}
+
+@keyframes node-float {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--drift-x, 24px), var(--drift-y, -24px));
+    opacity: 0;
+  }
+}
+
+.network-node {
+  position: absolute;
+  border-radius: 9999px;
+  animation: node-float linear infinite;
+}
+
+@keyframes modal-overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modal-card-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-overlay-enter {
+  animation: modal-overlay-in 150ms ease-out;
+}
+
+.modal-card-enter {
+  animation: modal-card-in 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes button-pop {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  35% {
+    transform: scale(0.88) rotate(-6deg);
+  }
+  70% {
+    transform: scale(1.12) rotate(4deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.pop-animate {
+  animation: button-pop 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}

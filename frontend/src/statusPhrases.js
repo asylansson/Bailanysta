@@ -1,0 +1,58 @@
+export const STATUS_PHRASES = {
+  ru: [
+    "Сегодня выдался удачный день!",
+    "Как дела, мир? А у меня всё отлично!",
+    "Что-то устал, много работы.",
+    "Хочу сегодня прогуляться, кто со мной?",
+    "Грустно и одиноко сегодня, что посоветуете?",
+    "Очень занят, звонить только если очень и очень нужно.",
+    "Настроение на миллион, всем добра!",
+    "Нужно больше кофе для продуктивного дня.",
+    "Наконец-то выспался — красота!",
+    "Кто-нибудь ещё чувствует, что понедельник наступает слишком быстро?",
+    "Маленькие победы тоже важны — сегодня я их праздную.",
+    "Дождь за окном навевает философское настроение.",
+    "Сделал сегодня то, что откладывал неделями. Горжусь собой!",
+    "Ищу вдохновение. Поделитесь чем-нибудь интересным?",
+    "Тишина и книга — вот и весь план на вечер.",
+  ],
+  kk: [
+    "Бүгін сәтті күн болды!",
+    "Қалайсыздар, дүние? Ал менде бәрі керемет!",
+    "Аздап шаршадым, жұмыс көп.",
+    "Бүгін серуендегім келеді, кім қосылады?",
+    "Бүгін көңілсіз әрі жалғызбын, не кеңес бересіздер?",
+    "Өте бос емеспін, тек өте қажет болса ғана қоңырау шалыңыз.",
+    "Көңіл-күй керемет, бәріңізге сәттілік тілеймін!",
+    "Өнімді күн үшін көбірек кофе керек.",
+    "Ақыры жақсылап ұйықтадым — тамаша!",
+    "Дүйсенбі тым тез келетінін біреу-міреу сезеді ме?",
+    "Кішкентай жетістіктер де маңызды — бүгін соны тойлаймын.",
+    "Терезеден жауған жаңбыр философиялық көңіл-күй сыйлайды.",
+    "Апталар бойы кейінге қалдырған ісімді бүгін бітірдім. Өзіммен мақтанамын!",
+    "Шабыт іздеп жүрмін. Қызық бірдеңемен бөлісесіз бе?",
+    "Тыныштық пен кітап — кештің жоспары осы ғана.",
+  ],
+  en: [
+    "Today has been a lucky day!",
+    "How's everyone doing? I'm doing great!",
+    "Feeling a bit tired, lots of work today.",
+    "Want to go for a walk today, anyone in?",
+    "Feeling sad and lonely today, any advice?",
+    "Super busy right now, only call if it's truly urgent.",
+    "Feeling on top of the world, sending good vibes!",
+    "Need more coffee for a productive day.",
+    "Finally got a full night's sleep — amazing!",
+    "Does anyone else feel like Mondays come around way too fast?",
+    "Small wins matter too — celebrating mine today.",
+    "The rain outside is putting me in a thoughtful mood.",
+    "Finally did the thing I'd been putting off for weeks. Proud of myself!",
+    "Looking for some inspiration. Share something interesting?",
+    "Quiet evening with a good book — that's the whole plan.",
+  ],
+};
+
+export function randomStatus(language = "ru") {
+  const phrases = STATUS_PHRASES[language] || STATUS_PHRASES.ru;
+  return phrases[Math.floor(Math.random() * phrases.length)];
+}
