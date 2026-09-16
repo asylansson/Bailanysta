@@ -41,16 +41,22 @@ export default function App() {
   // the app would otherwise show a "signed in" shell for an account that no
   // longer exists anywhere, with no way back to the sign-in button. Validate
   // the session against the server once and sign out locally if it's stale.
+  // This also re-syncs the cached user object, so a session stored before a
+  // field like `handle` existed picks it up without a fresh login.
   useEffect(() => {
     if (!token) return;
     let cancelled = false;
-    fetchMySettings().catch(() => {
-      if (!cancelled) logout();
-    });
+    fetchMySettings()
+      .then((settings) => {
+        if (!cancelled) updateUser(settings);
+      })
+      .catch(() => {
+        if (!cancelled) logout();
+      });
     return () => {
       cancelled = true;
     };
-  }, [token, logout]);
+  }, [token, logout, updateUser]);
 
   // Once per signed-in account, switch the UI to that account's saved language
   // preference (it should win over whatever a guest previously set on this browser).
@@ -74,7 +80,7 @@ export default function App() {
     <I18nProvider language={language} setLanguage={setLanguage}>
       <div className="min-h-screen bg-violet-50 dark:bg-gray-900">
         <TopProgressBar />
-        <Navbar currentUser={user} />
+        <Navbar currentUser={user} theme={theme} onToggleTheme={toggleTheme} onLogout={logout} />
         <Routes>
           <Route path="/" element={<Navigate to="/home" replace />} />
           <Route path="/home" element={<Feed currentUser={user} requireUser={requireUser} />} />

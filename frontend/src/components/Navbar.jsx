@@ -1,6 +1,10 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Link, useNavigate } from "react-router-dom";
 import Avatar from "./Avatar.jsx";
 import { useI18n } from "../i18n/I18nContext.jsx";
+
+const menuItemClass =
+  "block w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-violet-950 transition-colors";
 
 const primaryBase =
   "group relative flex h-11 min-w-[2.75rem] sm:h-12 sm:min-w-[4rem] shrink-0 items-center justify-center overflow-hidden rounded-xl px-2 sm:px-3 transition-colors duration-300";
@@ -84,13 +88,25 @@ const LANGUAGES = [
   { code: "ru", label: "RU" },
 ];
 
-export default function Navbar({ currentUser }) {
+export default function Navbar({ currentUser, theme, onToggleTheme, onLogout }) {
   const { t, language, setLanguage } = useI18n();
+  const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
+  function handleLogout() {
+    closeMenu();
+    onLogout();
+    navigate("/home");
+  }
 
   return (
     <header className="sticky top-0 z-10 border-b border-gray-200 bg-white/90 backdrop-blur dark:border-gray-700 dark:bg-gray-800/90">
-      <div className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0">
+      <div className="relative">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <span
             className="aurora-blob aurora-blob-1 -left-8 -top-10 h-40 w-40 opacity-40 dark:opacity-60"
             style={{ background: "radial-gradient(circle, rgba(167,139,250,0.9), transparent 70%)" }}
@@ -183,13 +199,39 @@ export default function Navbar({ currentUser }) {
 
           <div className="flex shrink-0 items-center gap-1">
             {currentUser ? (
-              <NavLink
-                to="/profile"
-                className={({ isActive }) => `${iconBase} ${isActive ? iconActive : ""}`}
-                title={t("nav.profile")}
-              >
-                <Avatar name={currentUser.name} picture={currentUser.picture} presetId={currentUser.avatarPreset} size="nav" />
-              </NavLink>
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setMenuOpen((v) => !v)}
+                  className={`${iconBase} ${menuOpen ? iconActive : ""}`}
+                  title={t("nav.profile")}
+                >
+                  <Avatar name={currentUser.name} picture={currentUser.picture} presetId={currentUser.avatarPreset} size="nav" />
+                </button>
+                {menuOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={closeMenu} />
+                    <div className="absolute right-0 top-full mt-2 w-48 rounded-xl border border-violet-400 dark:border-violet-900 bg-white dark:bg-gray-800 shadow-lg py-1 z-20 overflow-hidden">
+                      <Link to={`/u/${currentUser.handle}`} onClick={closeMenu} className={menuItemClass}>
+                        {t("nav.profile")}
+                      </Link>
+                      <Link to="/settings" onClick={closeMenu} className={menuItemClass}>
+                        {t("nav.settings")}
+                      </Link>
+                      <button type="button" onClick={() => { onToggleTheme(); closeMenu(); }} className={menuItemClass}>
+                        {theme === "dark" ? t("nav.lightTheme") : t("nav.darkTheme")}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className={`${menuItemClass} text-red-600 dark:text-red-400`}
+                      >
+                        {t("profile.signOut")}
+                      </button>
+                    </div>
+                  </>
+                )}
+              </div>
             ) : (
               <NavLink
                 to="/profile"
