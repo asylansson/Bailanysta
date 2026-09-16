@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.join(__dirname, "data", "db.json");
+const SEED_PATH = path.join(__dirname, "data", "seed.json");
 
 const EMPTY_DB = {
   users: [],
@@ -19,17 +20,22 @@ const EMPTY_DB = {
 };
 
 // db.json is gitignored (it can contain real signed-in users' data), so a
-// fresh clone won't have one - bootstrap an empty database on first read
-// instead of crashing.
+// fresh clone or a fresh deploy (Render's free tier has no persistent disk,
+// so this also runs on every restart) won't have one. Bootstrap it from the
+// committed seed.json - a fully synthetic dataset with no real user data -
+// falling back to an empty database if that's missing too.
 async function readDBRaw() {
   try {
     const raw = await readFile(DB_PATH, "utf-8");
     return JSON.parse(raw);
   } catch (err) {
     if (err.code !== "ENOENT") throw err;
+    const initial = await readFile(SEED_PATH, "utf-8")
+      .then(JSON.parse)
+      .catch(() => structuredClone(EMPTY_DB));
     await mkdir(path.dirname(DB_PATH), { recursive: true });
-    await writeFile(DB_PATH, JSON.stringify(EMPTY_DB, null, 2), "utf-8");
-    return structuredClone(EMPTY_DB);
+    await writeFile(DB_PATH, JSON.stringify(initial, null, 2), "utf-8");
+    return initial;
   }
 }
 
