@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import {
   fetchConversationStatus,
   fetchConversationMessages,
@@ -16,6 +16,7 @@ import { formatTime } from "../formatDate.js";
 
 export default function ConversationPage({ currentUser }) {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const { t, language } = useI18n();
   const [status, setStatus] = useState("loading");
   const [otherUser, setOtherUser] = useState(null);
@@ -85,13 +86,11 @@ export default function ConversationPage({ currentUser }) {
     }
   }
 
-  if (!currentUser) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        <p className="text-gray-500 dark:text-gray-400">{t("profileGate.subtitle")}</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!currentUser) navigate("/profile", { replace: true });
+  }, [currentUser, navigate]);
+
+  if (!currentUser) return null;
 
   if (status === "loading") {
     return (

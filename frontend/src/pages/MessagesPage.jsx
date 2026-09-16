@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchConversations } from "../api.js";
 import { useI18n } from "../i18n/I18nContext.jsx";
 import Avatar from "../components/Avatar.jsx";
@@ -13,6 +13,7 @@ const elegantButtonClass =
 
 export default function MessagesPage({ currentUser }) {
   const { t, tp, language } = useI18n();
+  const navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const [hasAnyConversations, setHasAnyConversations] = useState(null);
   const [status, setStatus] = useState("loading");
@@ -38,13 +39,11 @@ export default function MessagesPage({ currentUser }) {
     };
   }, [currentUser, query]);
 
-  if (!currentUser) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-6">
-        <p className="text-gray-500 dark:text-gray-400">{t("profileGate.subtitle")}</p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!currentUser) navigate("/profile", { replace: true });
+  }, [currentUser, navigate]);
+
+  if (!currentUser) return null;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">

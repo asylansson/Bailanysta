@@ -161,14 +161,16 @@ export default function Navbar({ currentUser }) {
               <FeedIcon />
               <span className={labelClass}>{t("nav.homeLabel")}</span>
             </NavLink>
-            <NavLink
-              to="/messages"
-              title={t("nav.messages")}
-              className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
-            >
-              <MessagesIcon />
-              <span className={labelClass}>{t("nav.messages")}</span>
-            </NavLink>
+            {currentUser && (
+              <NavLink
+                to="/messages"
+                title={t("nav.messages")}
+                className={({ isActive }) => `${primaryBase} ${isActive ? primaryActive : primaryInactive}`}
+              >
+                <MessagesIcon />
+                <span className={labelClass}>{t("nav.messages")}</span>
+              </NavLink>
+            )}
             <NavLink
               to="/communities"
               title={t("nav.communities")}
